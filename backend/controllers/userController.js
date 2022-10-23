@@ -16,7 +16,6 @@ const singup = asyncHandler(async (req, res) => {
 
     user = await user.save()
 
-    res.status(201)
     res.json({
       user,
       token: generateToken(user._id)
