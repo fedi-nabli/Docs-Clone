@@ -3,11 +3,14 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import connectDB from './config/db.js'
 import {notFound, errorHandler} from './middleware/errorMiddleware.js'
+import userRouter from './routes/userRoutes.js'
 
 dotenv.config()
 connectDB()
 const app = express()
 app.use(express.json())
+
+app.use(userRouter)
 
 app.use(notFound)
 app.use(errorHandler)
