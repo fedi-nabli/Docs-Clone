@@ -20,6 +20,11 @@ const singup = asyncHandler(async (req, res) => {
       user,
       token: generateToken(user._id)
     })
+  } else {
+    res.json({
+      user,
+      token: generateToken(user._id)
+    })
   }
 })
 
