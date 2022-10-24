@@ -23,6 +23,15 @@ const singup = asyncHandler(async (req, res) => {
   }
 })
 
+const getUserDetails = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user)
+  res.json({
+    user,
+    token: req.token
+  })
+})
+
 export {
-  singup
+  singup,
+  getUserDetails
 }
