@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
 final authRepositoryProvider = Provider(
-  (_) => AuthRepository(
+  (ref) => AuthRepository(
     googleSignIn: GoogleSignIn(),
     client: Client(),
     localStorageRepository: LocalStorageRepository(),
@@ -22,7 +22,6 @@ class AuthRepository {
   final GoogleSignIn _googleSignIn;
   final Client _client;
   final LocalStorageRepository _localStorageRepository;
-
   AuthRepository({
     required GoogleSignIn googleSignIn,
     required Client client,
@@ -33,7 +32,7 @@ class AuthRepository {
 
   Future<ErrorModel> signInWithGoogle() async {
     ErrorModel error = ErrorModel(
-      error: 'Some unexpected error happened!',
+      error: 'Some unexpected error occurred.',
       data: null,
     );
 
@@ -82,7 +81,7 @@ class AuthRepository {
 
   Future<ErrorModel> getUserData() async {
     ErrorModel error = ErrorModel(
-      error: 'Some unexpected error occured.',
+      error: 'Some unexpected error occurred.',
       data: null,
     );
     try {
@@ -96,14 +95,14 @@ class AuthRepository {
 
         switch (res.statusCode) {
           case 200:
-            final user = UserModel.fromJson(
+            final newUser = UserModel.fromJson(
               jsonEncode(
                 jsonDecode(res.body)['user'],
               ),
             ).copyWith(token: token);
 
-            error = ErrorModel(error: null, data: user);
-            _localStorageRepository.setToken(user.token);
+            error = ErrorModel(error: null, data: newUser);
+            _localStorageRepository.setToken(newUser.token);
 
             break;
         }
@@ -114,6 +113,12 @@ class AuthRepository {
         data: null,
       );
     }
+
     return error;
+  }
+
+  void signOut() async {
+    await _googleSignIn.signOut();
+    _localStorageRepository.setToken('');
   }
 }
