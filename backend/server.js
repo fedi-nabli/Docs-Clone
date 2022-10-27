@@ -5,6 +5,7 @@ import colors from 'colors'
 import connectDB from './config/db.js'
 import {notFound, errorHandler} from './middleware/errorMiddleware.js'
 import userRouter from './routes/userRoutes.js'
+import documentRouter from './routes/documentRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json())
 
 app.use(userRouter)
+app.use(documentRouter)
 
 app.use(notFound)
 app.use(errorHandler)
