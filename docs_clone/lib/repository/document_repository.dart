@@ -60,4 +60,51 @@ class DocumentRepository {
 
     return error;
   }
+
+  Future<ErrorModel> getDocuments(String token) async {
+    ErrorModel error = ErrorModel(
+      error: 'Some inexpected error occured!',
+      data: null,
+    );
+
+    try {
+      var res = await _client.get(
+        Uri.parse('$host/docs/me'),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+
+      switch (res.statusCode) {
+        case 200:
+          List<DocumentModel> documents = [];
+
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            documents.add(
+                DocumentModel.fromJson(jsonEncode(jsonDecode(res.body)[i])));
+          }
+
+          error = ErrorModel(
+            error: null,
+            data: documents,
+          );
+
+          break;
+        default:
+          error = ErrorModel(
+            error: res.body,
+            data: null,
+          );
+          break;
+      }
+    } catch (e) {
+      error = ErrorModel(
+        error: e.toString(),
+        data: null,
+      );
+    }
+
+    return error;
+  }
 }
