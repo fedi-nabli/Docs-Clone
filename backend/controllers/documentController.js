@@ -14,6 +14,12 @@ const createDoc = asyncHandler(async (req, res) => {
   res.json(document)
 })
 
+const getMyDocuments = asyncHandler(async (req, res) => {
+  let documents = await Document.find({uid: req.user})
+  res.json(documents)
+})
+
 export {
-  createDoc
+  createDoc,
+  getMyDocuments
 }
