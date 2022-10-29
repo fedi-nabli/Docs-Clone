@@ -8,6 +8,7 @@ import 'package:docs_clone/repository/document_repository.dart';
 import 'package:docs_clone/repository/socket_repository.dart';
 import 'package:docs_clone/widgets/loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -112,7 +113,23 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(
+                    text: 'http://localhost:3000/#/document/${widget.id}',
+                  ),
+                ).then(
+                  (value) => {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Link copied!',
+                        ),
+                      ),
+                    ),
+                  },
+                );
+              },
               icon: const Icon(
                 Icons.lock,
                 size: 16,
