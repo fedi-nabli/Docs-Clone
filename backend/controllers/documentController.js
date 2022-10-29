@@ -34,9 +34,16 @@ const getDocumentById = asyncHandler(async (req, res) => {
   res.json(document)
 })
 
+const saveData = async (data) => {
+  let document = await Document.findById(data.room)
+  document.content = data.delta
+  document = await document.save()
+}
+
 export {
   createDoc,
   getMyDocuments,
   updateDocTitle,
-  getDocumentById
+  getDocumentById,
+  saveData
 }

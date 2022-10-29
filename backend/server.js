@@ -8,6 +8,7 @@ import connectDB from './config/db.js'
 import {notFound, errorHandler} from './middleware/errorMiddleware.js'
 import userRouter from './routes/userRoutes.js'
 import documentRouter from './routes/documentRoutes.js'
+import { saveData } from './controllers/documentController.js'
 
 dotenv.config()
 connectDB()
@@ -29,6 +30,10 @@ io.on('connection', (socket) => {
 
   socket.on('typing', (data) => {
     socket.broadcast.to(data.room).emit('changes', data)
+  })
+
+  socket.on('save', (data) => {
+    saveData(data)
   })
 })
 

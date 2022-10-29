@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:docs_clone/colors.dart';
 import 'package:docs_clone/models/document_model.dart';
 import 'package:docs_clone/models/error_model.dart';
@@ -23,24 +25,29 @@ class DocumentScreen extends ConsumerStatefulWidget {
 class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   TextEditingController titleController =
       TextEditingController(text: 'Untitled Document');
-
   quill.QuillController? _controller;
-
   ErrorModel? errorModel;
-  SocketRepository? socketRepository = SocketRepository();
+  SocketRepository socketRepository = SocketRepository();
 
   @override
   void initState() {
     super.initState();
-    socketRepository?.joinRoom(widget.id);
+    socketRepository.joinRoom(widget.id);
     fetchDocumentData();
 
-    socketRepository?.changeListener((data) {
+    socketRepository.changeListener((data) {
       _controller?.compose(
         quill.Delta.fromJson(data['delta']),
         _controller?.selection ?? const TextSelection.collapsed(offset: 0),
         quill.ChangeSource.REMOTE,
       );
+    });
+
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      socketRepository.autoSave(<String, dynamic>{
+        'delta': _controller!.document.toDelta(),
+        'room': widget.id,
+      });
     });
   }
 
@@ -56,7 +63,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
         document: errorModel!.data.content.isEmpty
             ? quill.Document()
             : quill.Document.fromDelta(
-                quill.Delta.from(errorModel!.data.content),
+                quill.Delta.fromJson(errorModel!.data.content),
               ),
         selection: const TextSelection.collapsed(offset: 0),
       );
@@ -69,7 +76,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
           'delta': event.item2,
           'room': widget.id,
         };
-        socketRepository?.typing(map);
+        socketRepository.typing(map);
       }
     });
   }
