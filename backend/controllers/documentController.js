@@ -29,8 +29,14 @@ const updateDocTitle = asyncHandler(async (req, res) => {
   res.json(document)
 })
 
+const getDocumentById = asyncHandler(async (req, res) => {
+  const document = await Document.findById(req.params.id)
+  res.json(document)
+})
+
 export {
   createDoc,
   getMyDocuments,
-  updateDocTitle
+  updateDocTitle,
+  getDocumentById
 }
