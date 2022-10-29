@@ -9,6 +9,6 @@ const router = express.Router()
 
 router.post('/doc/create', protect, createDoc)
 router.get('/doc/me', protect, getMyDocuments)
-router.get('/doc/title', protect, updateDocTitle)
+router.post('/doc/title', protect, updateDocTitle)
 
 export default router
