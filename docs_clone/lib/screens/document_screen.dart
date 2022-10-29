@@ -10,6 +10,7 @@ import 'package:docs_clone/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class DocumentScreen extends ConsumerStatefulWidget {
   final String id;
@@ -127,9 +128,14 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
           padding: const EdgeInsets.symmetric(vertical: 9.0),
           child: Row(
             children: [
-              Image.asset(
-                'assets/images/docs-logo.png',
-                height: 40,
+              GestureDetector(
+                onTap: () {
+                  Routemaster.of(context).replace('/');
+                },
+                child: Image.asset(
+                  'assets/images/docs-logo.png',
+                  height: 40,
+                ),
               ),
               const SizedBox(width: 10),
               SizedBox(
