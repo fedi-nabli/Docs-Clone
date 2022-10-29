@@ -1,4 +1,6 @@
 import 'package:docs_clone/colors.dart';
+import 'package:docs_clone/repository/auth_repository.dart';
+import 'package:docs_clone/repository/document_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +26,14 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   void dispose() {
     super.dispose();
     titleController.dispose();
+  }
+
+  void updateTitle(WidgetRef ref, String title) {
+    ref.read(documentRepositoryProvider).updateTitle(
+          token: ref.read(userProvider)!.token,
+          id: widget.id,
+          title: title,
+        );
   }
 
   @override
@@ -70,6 +80,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                     ),
                     contentPadding: EdgeInsets.only(left: 10),
                   ),
+                  onSubmitted: (value) => updateTitle(ref, value),
                 ),
               ),
             ],
