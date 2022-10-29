@@ -26,6 +26,10 @@ io.on('connection', (socket) => {
   socket.on('join', (documentId) => {
     socket.join(documentId)
   })
+
+  socket.on('typing', (data) => {
+    socket.broadcast.to(data.room).emit('changes', data)
+  })
 })
 
 app.use(notFound)
